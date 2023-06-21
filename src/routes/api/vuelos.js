@@ -96,7 +96,13 @@ const router = Router();
  */
 router.get("/", async (req, res) => {
   try {
-    const vuelos = await prisma.vuelos.findMany(); // Corregido de 'prisma.vuelos.findMany()'
+    //set order by n_vuelo
+
+    const vuelos = await prisma.vuelos.findMany({
+      orderBy: {
+        fecha: "asc",
+      },
+    });
     res.json(vuelos);
   } catch (error) {
     console.error(error);

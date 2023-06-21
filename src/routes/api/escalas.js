@@ -97,6 +97,50 @@ router.get("/", async (req, res) => {
 
 /**
  * @openapi
+ * /api/escalas/vuelo/{n_vuelo}:
+ *   get:
+ *     tags:
+ *       - Escalas
+ *     parameters:
+ *       - name: n_vuelo
+ *         in: path
+ *         description: Número de vuelo
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: OK
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/definitions/Escala'
+ */
+router.get("/vuelo/:n_vuelo", async (req, res) => {
+  try {
+    const escalas = await prisma.escalas.findMany({
+      where: {
+        n_vuelo: req.params.n_vuelo,
+      },
+    });
+    res.json(escalas);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error al obtener las escalas" });
+  }
+});
+
+
+/**
+ * @openapi
  * /api/escalas:
  *   post:
  *     tags:
