@@ -38,10 +38,9 @@ model boleto {
   pasaporte_pasajero  String                @db.VarChar(50)
   n_vuelo             String                @db.VarChar(200)
   fecha_compra        DateTime              @db.Date
-  asiento             String                @db.VarChar(50)
   clase               String                @db.VarChar(100)
   precio              Decimal               @db.Decimal(6, 2)
-  n_boleto            String                @db.Char(10)
+  n_boleto            String?               @db.Char(10)
   pasajeros           pasajeros             @relation(fields: [pasaporte_pasajero], references: [n_pasaporte], onDelete: NoAction, onUpdate: NoAction, map: "boleto_pasajeros_fk")
   vuelos              vuelos                @relation(fields: [n_vuelo], references: [n_vuelo], onDelete: NoAction, onUpdate: NoAction, map: "boleto_vuelos_fk")
   checkin             checkin?

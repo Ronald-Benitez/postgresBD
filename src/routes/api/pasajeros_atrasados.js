@@ -86,6 +86,45 @@ router.get("/", async (req, res) => {
   }
 });
 
+/**
+ * @openapi
+ * /api/pasajeros_atrasados/boleto:
+ *   get:
+ *     tags:
+ *       - Pasajeros Atrasados
+ *     summary: Obtiene la lista de pasajeros atrasados con información de los boletos.
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: OK
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/definitions/PasajeroAtrasado'
+ */
+
+router.get("/boleto", async (req, res) => {
+  try {
+    const pasajerosAtrasados = await prisma.pasajeros_atrasados.findMany({
+      include: {
+        boleto: true, // Realiza el inner join con la tabla boleto
+      },
+    });
+    res.json(pasajerosAtrasados);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error al obtener los pasajeros atrasados" });
+  }
+});
+
+
 
 /**
  * @openapi

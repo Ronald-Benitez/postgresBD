@@ -21,12 +21,9 @@ const router = Router();
  *           type: string
  *           format: date
  *           example: 2023-06-20
- *         asiento:
- *           type: string
- *           example: A1
  *         clase:
  *           type: string
- *           example: Economy
+ *           example: Económica
  *         precio:
  *           type: number
  *           example: 100.5
@@ -46,12 +43,9 @@ const router = Router();
  *           type: string
  *           format: date
  *           example: 2023-06-20
- *         asiento:
- *           type: string
- *           example: A1
  *         clase:
  *           type: string
- *           example: Economy
+ *           example: Económica
  *         precio:
  *           type: number
  *           example: 100.5
@@ -163,6 +157,45 @@ router.get("/:id_boleto", async (req, res) => {
     res.status(500).json({ error: "Error al obtener el boleto" });
   }
 });
+
+/**
+ * @openapi
+ * /api/boletos/n_vuelo/{n_vuelo}:
+ *   get:
+ *     tags:
+ *       - Boletos
+ *     description: Obtiene un boleto por su número de vuelo
+ *     parameters:
+ *       - name: n_vuelo
+ *         in: path
+ *         description: Número de vuelo del boleto
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: "FL-1"
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Boleto'
+ */
+router.get("/n_vuelo/:n_vuelo", async (req, res) => {
+  try {
+    const boleto = await prisma.boleto.findMany({
+      where: {
+        n_vuelo: req.params.n_vuelo,
+      },
+    });
+    res.json(boleto);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error al obtener el boleto" });
+  }
+});
+
+
 
 /**
  * @openapi

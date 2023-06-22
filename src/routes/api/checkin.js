@@ -115,7 +115,7 @@ router.get("/", async (req, res) => {
 router.post("/", async (req, res) => {
   try {
     const { fecha, hora, ...data } = req.body;
-    const nuevaFecha = moment(fecha).format("YYYY-MM-DD");
+    const nuevaFecha = new Date(fecha);
     const nuevaHora = new Date("1970-01-01T" + hora);
     nuevaHora.setHours(nuevaHora.getHours() - 6);
     const nuevoCheckin = await prisma.checkin.create({
@@ -156,6 +156,45 @@ router.get("/:id", async (req, res) => {
     const checkin = await prisma.checkin.findUnique({
       where: {
         id_boleto: parseInt(req.params.id),
+      },
+    });
+    res.json(checkin);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error al obtener el check-in" });
+  }
+});
+
+/**
+ * @openapi
+ * /api/checkins/n_vuelo/{n_vuelo}:
+ *   get:
+ *     tags:
+ *       - Checkins
+ *     description: Obtiene los datos de un check-in por el número de vuelo
+ *     parameters:
+ *       - name: n_vuelo
+ *         in: path
+ *         description: Número de vuelo del check-in
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: "FL-1"
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Checkin'
+ */
+router.get("/n_vuelo/:n_vuelo", async (req, res) => {
+  try {
+    const checkin = await prisma.checkin.findMany({
+      where: {
+        boleto: {
+          n_vuelo: req.params.n_vuelo,
+        },
       },
     });
     res.json(checkin);
@@ -213,6 +252,8 @@ router.put("/:id", async (req, res) => {
     res.status(500).json({ error: "Error al actualizar el check-in" });
   }
 });
+
+
 
 /**
  * @openapi
