@@ -192,9 +192,7 @@ router.get("/n_vuelo/:n_vuelo", async (req, res) => {
   try {
     const checkin = await prisma.checkin.findMany({
       where: {
-        boleto: {
-          n_vuelo: req.params.n_vuelo,
-        },
+        n_vuelo: req.params.n_vuelo,
       },
     });
     res.json(checkin);
@@ -252,8 +250,6 @@ router.put("/:id", async (req, res) => {
     res.status(500).json({ error: "Error al actualizar el check-in" });
   }
 });
-
-
 
 /**
  * @openapi
